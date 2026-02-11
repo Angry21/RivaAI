@@ -1,0 +1,4 @@
+# file: D:\EXAMS\AGENTIC AI\New folder\rivaai\telephony\models.py
+# hypothesis_version: 6.151.6
+
+['answered', 'ended', 'failed', 'in_progress', 'incoming', 'outgoing', 'ringing']

@@ -1,0 +1,4 @@
+# file: C:\Users\Acer\AppData\Roaming\Python\Python313\site-packages\twilio\base\exceptions.py
+# hypothesis_version: 6.151.6
+
+['\x1b[31m\x1b[49m%s\x1b[0m', '\x1b[33m\x1b[49m%s\x1b[0m', '\x1b[34m\x1b[49m%s\x1b[0m', '\x1b[36m\x1b[49m%s\x1b[0m', '\x1b[37m\x1b[49m%s\x1b[0m', ' - {0}', '%s %s', '(no URI)', '(no detail)', '(unknown field)', ', ', '?', 'Detail', 'Error Code', 'GET', 'HTTP Error', 'HTTP {0} error: {1}', 'Status', 'Title', 'Validation Errors', 'Your request was:', 'detail', 'isatty', 'pointer', '{0} ({1})']

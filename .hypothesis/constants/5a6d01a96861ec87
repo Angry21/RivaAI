@@ -1,0 +1,4 @@
+# file: C:\Users\Acer\AppData\Roaming\Python\Python313\site-packages\redis\_parsers\hiredis.py
+# hypothesis_version: 6.151.6
+
+['_reader', 'encoding', 'errors', 'protocolError', 'replyError']

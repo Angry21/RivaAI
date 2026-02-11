@@ -1,0 +1,4 @@
+# file: C:\Users\Acer\AppData\Roaming\Python\Python313\site-packages\twilio\auth_strategy\auth_type.py
+# hypothesis_version: 6.151.6
+
+['api_key', 'basic', 'client_credentials', 'noauth', 'orgs_stoken']

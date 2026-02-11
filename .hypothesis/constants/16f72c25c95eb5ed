@@ -1,0 +1,4 @@
+# file: D:\EXAMS\AGENTIC AI\New folder\rivaai\telephony\gateway.py
+# hypothesis_version: 6.151.6
+
+[8000, '8000', 'audio_format', 'call_sid', 'duration', 'in-progress', 'mulaw', 'sample_rate', 'status']

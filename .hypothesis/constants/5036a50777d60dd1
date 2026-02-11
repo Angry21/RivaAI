@@ -1,0 +1,4 @@
+# file: C:\Users\Acer\AppData\Roaming\Python\Python313\site-packages\twilio\base\client_base.py
+# hypothesis_version: 6.151.6
+
+[' {}', '.', '<Twilio {}>', 'Accept', 'Accept-Charset', 'Authorization', 'Content-Type', 'DELETE', 'POST', 'PUT', 'TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN', 'TWILIO_EDGE', 'TWILIO_REGION', 'User-Agent', 'X-Twilio-Client', 'application/json', 'python-{}', 'us1', 'utf-8']

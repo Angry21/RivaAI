@@ -1,0 +1,4 @@
+# file: C:\Users\Acer\AppData\Roaming\Python\Python313\site-packages\twilio\twiml\voice_response.py
+# hypothesis_version: 6.151.6
+
+['AiSession', 'Application', 'ApplicationSid', 'Assistant', 'Autopilot', 'Client', 'Conference', 'Config', 'Connect', 'Conversation', 'ConversationRelay', 'Dial', 'Echo', 'Enqueue', 'Gather', 'Hangup', 'Header', 'Headers', 'Identity', 'Language', 'Leave', 'Number', 'Parameter', 'Pause', 'Pay', 'Play', 'Prompt', 'Queue', 'Record', 'Recording', 'Redirect', 'Refer', 'Reject', 'Response', 'Room', 'Say', 'Sim', 'Sip', 'Siprec', 'Sms', 'Start', 'Stop', 'Stream', 'Task', 'Transcription', 'Uri', 'VirtualAgent', 'WhatsApp', 'break', 'emphasis', 'lang', 'p', 'phoneme', 'prosody', 's', 'say-as', 'sub', 'w']

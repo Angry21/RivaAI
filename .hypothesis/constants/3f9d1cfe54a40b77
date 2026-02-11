@@ -1,0 +1,4 @@
+# file: D:\EXAMS\AGENTIC AI\New folder\rivaai\config\settings.py
+# hypothesis_version: 6.151.6
+
+[0.4, 0.6, 0.7, 0.8, 100, 300, 500, 800, 1200, 3000, 3600, 8000, 9090, '.env', '0.0.0.0', '0.1.0', 'Anthropic API key', 'INFO', 'OpenAI API key', 'Redis connection URL', 'RivaAI', 'Session TTL in hours', 'Twilio Account SID', 'Twilio Auth Token', 'Twilio Phone Number', 'bn-IN', 'development', 'gpt-4-turbo-preview', 'hi-IN', 'ignore', 'llama-3.1-8b-instant', 'mr-IN', 'ta-IN', 'te-IN', 'utf-8']
