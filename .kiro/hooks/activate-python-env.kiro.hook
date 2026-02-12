@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Activate Python Environment",
+  "description": "Automatically activates the Python virtual environment (.venv) before processing any prompt to ensure all Python commands run in the correct environment",
+  "version": "1",
+  "when": {
+    "type": "promptSubmit"
+  },
+  "then": {
+    "type": "runCommand",
+    "command": ".venv\\Scripts\\activate"
+  }
+}

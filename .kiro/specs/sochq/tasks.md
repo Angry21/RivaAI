@@ -17,7 +17,7 @@ The implementation uses Python with FastAPI + uvloop for the backend (or Node.js
   - Set up AWS RDS Proxy and PostgreSQL connection pooling for 1000+ concurrent calls
   - _Requirements: All (foundational)_
 
-- [ ] 2. Implement Telephony Gateway and Audio Router
+- [x] 2. Implement Telephony Gateway and Audio Router
   - [x] 2.1 Create Twilio integration for call handling
     - Implement `TelephonyGateway` class with call lifecycle management
     - Handle incoming calls and establish WebSocket connections
@@ -48,7 +48,7 @@ The implementation uses Python with FastAPI + uvloop for the backend (or Node.js
 - [x] 3. Checkpoint - Verify telephony and audio routing
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 4. Implement Speech Processing components
+- [x] 4. Implement Speech Processing components
   - [x] 4.1 Create Speech-to-Text Processor with streaming
     - Implement `SpeechProcessor` class integrating Deepgram Nova-2
     - Configure streaming recognition with partial results (<300ms latency)
@@ -57,14 +57,14 @@ The implementation uses Python with FastAPI + uvloop for the backend (or Node.js
     - Handle audio transcoding from G.711 µ-law to Linear16
     - _Requirements: 1.2, 2.1, 2.2, 2.4, 2.5_
   
-  - [ ] 4.2 Write property tests for STT latency and accuracy
+  - [x] 4.2 Write property tests for STT latency and accuracy
     - **Property 2: Streaming STT Latency**
     - **Property 5: Noise Robustness**
     - **Property 6: Low Confidence Clarification**
     - **Property 8: Voice Activity Detection**
     - **Validates: Requirements 1.2, 2.1, 2.2, 2.4**
   
-  - [ ] 4.3 Create Text-to-Speech Processor with streaming
+  - [x] 4.3 Create Text-to-Speech Processor with streaming
     - Implement `TextToSpeechProcessor` class integrating ElevenLabs Turbo
     - Configure streaming synthesis with <500ms first chunk latency
     - Support natural voices for all 5 languages
@@ -72,24 +72,24 @@ The implementation uses Python with FastAPI + uvloop for the backend (or Node.js
     - Implement Optimistic TTS Pipeline (Parallel Safety Check + Audio Buffering)
     - _Requirements: 1.5_
   
-  - [ ] 4.4 Write property test for TTS latency
+  - [x] 4.4 Write property test for TTS latency
     - **Property 4: Streaming TTS Latency**
     - **Validates: Requirements 1.5**
   
-  - [ ] 4.5 Implement language detection and DTMF fallback
+  - [x] 4.5 Implement language detection and DTMF fallback
     - Add language selection via DTMF when detection fails
     - Implement fallback to DTMF input mode for STT failures
     - _Requirements: 2.5, 8.1_
 
 - [ ] 5. Implement Session Management with privacy preservation
-  - [ ] 5.1 Create Session Memory with Redis backend
+  - [x] 5.1 Create Session Memory with Redis backend
     - Implement `SessionMemory` class with 24-hour TTL
     - Hash caller ANI using SHA-256 for privacy
     - Store conversation history and extracted entities
     - Implement automatic session expiration
     - _Requirements: 3.1, 3.3, 3.4_
   
-  - [ ] 5.2 Implement PII masking with NER
+  - [x] 5.2 Implement PII masking with NER
     - Create `mask_pii()` function using NER-based tokenization
     - Detect and mask names, phone numbers, addresses
     - Apply masking before storing any conversation data

@@ -7,10 +7,11 @@ from typing import Optional
 from uuid import uuid4
 
 from twilio.rest import Client
-from twilio.twiml.voice_response import VoiceResponse, Connect, Stream
+from twilio.twiml.voice_response import VoiceResponse, Connect, Stream, Gather
 
 from rivaai.config import get_settings
 from rivaai.telephony.models import CallSession, CallStatus, WebSocketConnection
+from rivaai.telephony.dtmf_handler import DTMFHandler
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +34,7 @@ class TelephonyGateway:
             self.settings.twilio_account_sid,
             self.settings.twilio_auth_token
         )
+        self.dtmf_handler = DTMFHandler()
         logger.info("TelephonyGateway initialized")
 
     def handle_incoming_call(self, caller_ani: str) -> CallSession:
@@ -191,6 +193,122 @@ class TelephonyGateway:
             SHA-256 hash of the ANI
         """
         return hashlib.sha256(ani.encode()).hexdigest()
+
+    def generate_language_selection_twiml(
+        self,
+        call_sid: str,
+        action_url: str,
+        language_code: Optional[str] = None,
+    ) -> str:
+        """
+        Generate TwiML for language selection via DTMF.
+        
+        Used when language detection fails or is unavailable.
+        
+        Args:
+            call_sid: Twilio call SID
+            action_url: URL to POST DTMF results
+            language_code: Optional language for prompt (defaults to Hindi)
+            
+        Returns:
+            TwiML XML string
+        """
+        response = VoiceResponse()
+        
+        # Get language selection prompt
+        prompt_text = self.dtmf_handler.get_language_selection_prompt(language_code)
+        
+        # Use Gather to collect DTMF input
+        gather = Gather(
+            num_digits=1,
+            action=action_url,
+            method="POST",
+            timeout=10,
+        )
+        gather.say(prompt_text, language=language_code or "hi-IN")
+        
+        response.append(gather)
+        
+        # If no input, repeat the prompt
+        response.redirect(action_url)
+        
+        logger.info(f"Generated language selection TwiML for call_sid={call_sid}")
+        
+        return str(response)
+
+    def generate_stt_fallback_twiml(
+        self,
+        call_sid: str,
+        action_url: str,
+        language_code: str,
+    ) -> str:
+        """
+        Generate TwiML for DTMF fallback when STT fails.
+        
+        Provides domain selection menu when speech recognition is unavailable.
+        
+        Args:
+            call_sid: Twilio call SID
+            action_url: URL to POST DTMF results
+            language_code: Language code for prompts
+            
+        Returns:
+            TwiML XML string
+        """
+        response = VoiceResponse()
+        
+        # Get STT failure prompt (domain selection)
+        prompt_text = self.dtmf_handler.get_stt_failure_prompt(language_code)
+        
+        # Use Gather to collect DTMF input
+        gather = Gather(
+            num_digits=1,
+            action=action_url,
+            method="POST",
+            timeout=10,
+        )
+        gather.say(prompt_text, language=language_code)
+        
+        response.append(gather)
+        
+        # If no input, repeat the prompt
+        response.redirect(action_url)
+        
+        logger.info(
+            f"Generated STT fallback TwiML for call_sid={call_sid}, "
+            f"language={language_code}"
+        )
+        
+        return str(response)
+
+    def generate_invalid_input_twiml(
+        self,
+        call_sid: str,
+        retry_url: str,
+        language_code: str,
+    ) -> str:
+        """
+        Generate TwiML for invalid DTMF input.
+        
+        Args:
+            call_sid: Twilio call SID
+            retry_url: URL to retry input
+            language_code: Language code for prompts
+            
+        Returns:
+            TwiML XML string
+        """
+        response = VoiceResponse()
+        
+        # Get invalid input prompt
+        prompt_text = self.dtmf_handler.get_invalid_input_prompt(language_code)
+        
+        response.say(prompt_text, language=language_code)
+        response.redirect(retry_url)
+        
+        logger.info(f"Generated invalid input TwiML for call_sid={call_sid}")
+        
+        return str(response)
 
     def get_call_metadata(self, call_sid: str) -> dict:
         """

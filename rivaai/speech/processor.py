@@ -65,6 +65,67 @@ class SpeechProcessor:
         """
         return self.supported_languages.copy()
 
+    async def detect_language(
+        self,
+        audio_data: bytes,
+        is_mulaw: bool = True,
+    ) -> Optional[str]:
+        """Detect language from audio sample.
+        
+        Uses Deepgram's language detection to identify the spoken language.
+        Returns None if detection fails or confidence is too low.
+        
+        Args:
+            audio_data: Audio data bytes
+            is_mulaw: Whether audio is in G.711 µ-law format
+            
+        Returns:
+            Detected language code (e.g., 'hi-IN') or None if detection fails
+        """
+        try:
+            # Transcode if needed
+            if is_mulaw:
+                audio_data = self._transcode_mulaw_to_linear16(audio_data)
+            
+            # Use Deepgram's prerecorded API with language detection
+            payload = {
+                "buffer": audio_data,
+            }
+            
+            options = {
+                "model": "nova-2",
+                "detect_language": True,  # Enable language detection
+                "encoding": "linear16",
+                "sample_rate": 8000,
+                "channels": 1,
+            }
+            
+            response = await self.client.listen.asyncrest.v("1").transcribe_file(
+                payload, options
+            )
+            
+            # Extract detected language
+            if response.results and response.results.channels:
+                detected_language = response.results.channels[0].detected_language
+                
+                if detected_language:
+                    # Check if detected language is in our supported list
+                    if detected_language in self.supported_languages:
+                        logger.info(f"Language detected: {detected_language}")
+                        return detected_language
+                    else:
+                        logger.warning(
+                            f"Detected language {detected_language} not in supported list"
+                        )
+                        return None
+            
+            logger.warning("Language detection failed: no language detected")
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error detecting language: {e}")
+            return None
+
     def _transcode_mulaw_to_linear16(self, mulaw_data: bytes) -> bytes:
         """Transcode G.711 µ-law audio to Linear16 PCM.
         
