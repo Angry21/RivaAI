@@ -116,7 +116,7 @@ The implementation uses Python with FastAPI + uvloop for the backend (or Node.js
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 7. Implement Knowledge Base with Unified PostgreSQL Store
-  - [ ] 7.1 Set up PostgreSQL with pgvector extension
+  - [x] 7.1 Set up PostgreSQL with pgvector extension
     - Configure PostgreSQL database with pgvector extension
     - Create tables for farming, education, welfare domains with vector columns
     - Implement embedding generation using text-embedding-3-large
