@@ -15,17 +15,19 @@
 - Pydantic v2 for data validation and settings management
 
 ### Telephony & Speech
-- Twilio for PSTN connectivity and WebSocket media streams
-- Deepgram Nova-2 for Speech-to-Text (STT)
-- ElevenLabs Turbo for Text-to-Speech (TTS)
+- Amazon Connect or Exotel for PSTN connectivity in India (Twilio fallback)
+- AWS Transcribe for Speech-to-Text (STT) with streaming support
+- AWS Polly for Text-to-Speech (TTS) with neural voices
+- Future: Speech-to-speech models for lowest latency
 
 ### Data Storage
 - PostgreSQL with pgvector extension for knowledge store
 - Redis for session management with 24-hour TTL
 
 ### LLM & AI
-- GPT-4/Claude for complex reasoning
-- Groq API for fast responses
+- AWS Bedrock with Claude 3.5 Sonnet for complex reasoning
+- AWS Bedrock with Claude 3 Haiku for fast responses
+- Amazon Titan Embeddings V2 for vector search
 - Hypothesis for property-based testing
 
 ## Build System

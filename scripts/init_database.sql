@@ -68,11 +68,27 @@ CREATE TABLE IF NOT EXISTS crop_weather_requirements (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Create unified knowledge_items table for retrieval
+-- This aggregates all searchable content for efficient vector search
+CREATE TABLE IF NOT EXISTS knowledge_items (
+    item_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    content TEXT NOT NULL,
+    embedding vector(1536) NOT NULL,
+    metadata JSONB NOT NULL,
+    domain VARCHAR(50) NOT NULL, -- 'agriculture', 'welfare', 'education'
+    entity_type VARCHAR(50) NOT NULL, -- 'crop', 'chemical', 'scheme', 'document'
+    source_table VARCHAR(50) NOT NULL,
+    source_id INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Create vector search indexes using ivfflat
 -- Note: These should be created after data is loaded for optimal performance
-CREATE INDEX IF NOT EXISTS crops_embedding_idx ON crops USING ivfflat (embedding vector_cosine_ops);
-CREATE INDEX IF NOT EXISTS chemicals_embedding_idx ON chemicals USING ivfflat (embedding vector_cosine_ops);
-CREATE INDEX IF NOT EXISTS schemes_embedding_idx ON schemes USING ivfflat (embedding vector_cosine_ops);
+CREATE INDEX IF NOT EXISTS crops_embedding_idx ON crops USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+CREATE INDEX IF NOT EXISTS chemicals_embedding_idx ON chemicals USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+CREATE INDEX IF NOT EXISTS schemes_embedding_idx ON schemes USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+CREATE INDEX IF NOT EXISTS knowledge_items_embedding_idx ON knowledge_items USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
 
 -- Create standard indexes for common queries
 CREATE INDEX IF NOT EXISTS crops_name_idx ON crops(name);
@@ -81,6 +97,9 @@ CREATE INDEX IF NOT EXISTS schemes_name_idx ON schemes(name);
 CREATE INDEX IF NOT EXISTS schemes_domain_idx ON schemes(domain);
 CREATE INDEX IF NOT EXISTS crop_chemical_crop_id_idx ON crop_chemical_relationships(crop_id);
 CREATE INDEX IF NOT EXISTS crop_chemical_chemical_id_idx ON crop_chemical_relationships(chemical_id);
+CREATE INDEX IF NOT EXISTS knowledge_items_domain_idx ON knowledge_items(domain);
+CREATE INDEX IF NOT EXISTS knowledge_items_entity_type_idx ON knowledge_items(entity_type);
+CREATE INDEX IF NOT EXISTS knowledge_items_source_idx ON knowledge_items(source_table, source_id);
 
 -- Create function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -96,6 +115,9 @@ CREATE TRIGGER update_crops_updated_at BEFORE UPDATE ON crops
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_chemicals_updated_at BEFORE UPDATE ON chemicals
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_knowledge_items_updated_at BEFORE UPDATE ON knowledge_items
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Insert sample data for Wheat (as per design document - start small)

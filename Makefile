@@ -1,4 +1,4 @@
-.PHONY: install test lint format clean run dev help
+.PHONY: install test lint format clean run dev help setup-kb verify-kb
 
 help:
 	@echo "RivaAI Development Commands"
@@ -12,6 +12,8 @@ help:
 	@echo "clean      - Clean build artifacts"
 	@echo "run        - Run the application"
 	@echo "dev        - Run in development mode with auto-reload"
+	@echo "setup-kb   - Setup knowledge base (database + sample data)"
+	@echo "verify-kb  - Verify knowledge base setup"
 
 install:
 	poetry install
@@ -45,3 +47,11 @@ run:
 
 dev:
 	poetry run uvicorn rivaai.main:app --reload --host 0.0.0.0 --port 8000
+
+setup-kb:
+	@echo "Setting up knowledge base..."
+	@bash scripts/setup_knowledge_base.sh || powershell scripts/setup_knowledge_base.ps1
+
+verify-kb:
+	@echo "Verifying knowledge base setup..."
+	poetry run python scripts/verify_knowledge_base.py

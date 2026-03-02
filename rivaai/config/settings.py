@@ -28,34 +28,92 @@ class Settings(BaseSettings):
     port: int = 8000
     workers: int = 4
 
-    # Telephony (Twilio)
+    # Telephony - India-compatible options
+    telephony_provider: str = Field(
+        default="amazon_connect",
+        description="Telephony provider: amazon_connect, exotel, or twilio"
+    )
+    
+    # Amazon Connect (Primary for India)
+    amazon_connect_instance_id: str = Field(default="", description="Amazon Connect instance ID")
+    amazon_connect_contact_flow_id: str = Field(default="", description="Contact flow ID")
+    amazon_connect_phone_number: str = Field(default="", description="Amazon Connect phone number")
+    
+    # Exotel (Alternative for India)
+    exotel_api_key: str = Field(default="", description="Exotel API key")
+    exotel_api_token: str = Field(default="", description="Exotel API token")
+    exotel_sid: str = Field(default="", description="Exotel SID")
+    exotel_phone_number: str = Field(default="", description="Exotel phone number")
+    
+    # Twilio (Fallback - limited India support)
     twilio_account_sid: str = Field(default="", description="Twilio Account SID")
     twilio_auth_token: str = Field(default="", description="Twilio Auth Token")
     twilio_phone_number: str = Field(default="", description="Twilio Phone Number")
-    twilio_websocket_url: str = Field(
-        default="", description="WebSocket URL for Twilio media streams"
-    )
 
-    # Speech Services
-    deepgram_api_key: str = Field(default="", description="Deepgram API key for STT")
-    elevenlabs_api_key: str = Field(default="", description="ElevenLabs API key for TTS")
+    # Speech Services - AWS Native (Primary for low latency)
+    use_aws_speech: bool = Field(default=True, description="Use AWS Transcribe/Polly for speech")
+    
+    # AWS Transcribe (STT)
+    transcribe_language_code: str = Field(default="hi-IN", description="Primary language for transcription")
+    transcribe_enable_partial_results: bool = Field(default=True, description="Enable streaming partial results")
+    
+    # AWS Polly (TTS)
+    polly_voice_id: str = Field(default="Aditi", description="Polly voice ID (Aditi for Hindi)")
+    polly_engine: str = Field(default="neural", description="Polly engine: standard or neural")
+    
+    # Speech-to-Speech Model (Future - lowest latency)
+    use_speech_to_speech: bool = Field(default=False, description="Use direct speech-to-speech model")
+    speech_model_provider: str = Field(
+        default="bedrock",
+        description="Speech model provider: bedrock, openai, or custom"
+    )
+    
+    # Fallback: External Speech Services
+    deepgram_api_key: str = Field(default="", description="Deepgram API key (fallback STT)")
+    elevenlabs_api_key: str = Field(default="", description="ElevenLabs API key (fallback TTS)")
+    
+    # Supported Languages
     supported_languages: List[str] = Field(
         default=["hi-IN", "mr-IN", "te-IN", "ta-IN", "bn-IN"],
         description="Supported language codes",
     )
 
-    # LLM Services
-    openai_api_key: str = Field(default="", description="OpenAI API key")
-    anthropic_api_key: str = Field(default="", description="Anthropic API key")
-    groq_api_key: str = Field(default="", description="Groq API key for fast LLM")
+    # AWS Configuration
+    aws_region: str = Field(default="us-east-1", description="AWS region for services")
+    aws_access_key_id: str = Field(default="", description="AWS access key ID (optional if using IAM roles)")
+    aws_secret_access_key: str = Field(default="", description="AWS secret access key (optional if using IAM roles)")
+
+    # AWS Bedrock - LLM Services
+    use_bedrock: bool = Field(default=True, description="Use AWS Bedrock for LLM services")
+    bedrock_main_model: str = Field(
+        default="anthropic.claude-3-5-sonnet-20241022-v2:0",
+        description="Main LLM model via Bedrock for complex reasoning"
+    )
+    bedrock_fast_model: str = Field(
+        default="anthropic.claude-3-haiku-20240307-v1:0",
+        description="Fast LLM model via Bedrock for simple responses"
+    )
+    bedrock_embedding_model: str = Field(
+        default="amazon.titan-embed-text-v2:0",
+        description="Embedding model via Bedrock for vector search"
+    )
+    embedding_dimensions: int = Field(
+        default=1024,
+        description="Embedding dimensions (1024 for Titan V2, 1536 for OpenAI)"
+    )
+
+    # Fallback: External LLM Services (if not using Bedrock)
+    openai_api_key: str = Field(default="", description="OpenAI API key (fallback)")
+    anthropic_api_key: str = Field(default="", description="Anthropic API key (fallback)")
+    groq_api_key: str = Field(default="", description="Groq API key (fallback)")
     main_llm_model: str = Field(
-        default="gpt-4-turbo-preview", description="Main LLM model for complex reasoning"
+        default="gpt-4-turbo-preview", description="Fallback main LLM model"
     )
     small_llm_model: str = Field(
-        default="llama-3.1-8b-instant", description="Small LLM model for fast responses"
+        default="llama-3.1-8b-instant", description="Fallback small LLM model"
     )
     embedding_model: str = Field(
-        default="text-embedding-3-large", description="Embedding model for vector search"
+        default="text-embedding-3-large", description="Fallback embedding model"
     )
 
     # Database (PostgreSQL with pgvector)
